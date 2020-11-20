@@ -3,6 +3,9 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, abort, \
     send_from_directory
 from werkzeug.utils import secure_filename
+from model import execute
+from os import listdir
+from os.path import isfile, join
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
@@ -37,6 +40,11 @@ def upload_files():
             abort(400)
         uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
     return redirect(url_for('index'))
+
+@app.route('/send', methods=['POST'])
+def send_images():
+    onlyfiles = [f for f in listdir('./uploads/') if isfile(join('./uploads/', f))]
+    return onlyfiles[0]
 
 @app.route('/uploads/<filename>')
 def upload(filename):
