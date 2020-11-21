@@ -5,11 +5,13 @@ import pandas as pd
 import os
 from scipy import ndimage
 import math
-import keras
 import ast
 import operator as op
 import re
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior() 
+import keras
 #Suppressing warning
 def warn(*args, **kwargs):
     pass
@@ -26,11 +28,11 @@ dict_img = {} #ORIGINAL IMAGE DICTIONARY
 keras.backend.set_image_data_format("channels_first")
 
 #loading models
-try:
-    model = keras.models.load_model('./models/Digits-model.h5', compile=False)
-
-except Exception as e:
-    print('Model couldnot be loaded',e)
+model = keras.models.load_model('./models/Digits-model.h5', compile=False)
+model._make_predict_function()
+graph = tf.get_default_graph()
+# except Exception as e:
+#     print('Model couldnot be loaded',e)
 
 #defining functions for image processing
 
@@ -369,7 +371,7 @@ def extract_box(img, show=True):
             ax = fig.add_subplot(l,1,i)
             ax.imshow(img[rect[1]:rect[1]+rect[3], rect[0]:rect[0]+rect[2]])
             i = i+1
-        plt.show()
+        #plt.show()
         
     return rectangle_locs
 
@@ -527,7 +529,7 @@ def extract_line(image, beta=0.7, alpha=0.002, show = True):
         ax3.axis('off')
         
         fig0.suptitle('Denoising')
-        plt.show()
+        # plt.show()
     
         fig1 = plt.figure(figsize=(15,5))
         fig1.suptitle('Line Detection')
@@ -539,7 +541,7 @@ def extract_line(image, beta=0.7, alpha=0.002, show = True):
         ax2.axis("off")
         ax2.imshow(cv2.cvtColor(cleaned_orig_rec, cv2.COLOR_BGR2RGB))
         
-        plt.show()
+        # plt.show()
     
     return cleaned_orig, uppers[diff_index], lowers[diff_index]
 
@@ -715,7 +717,7 @@ def text_segment(Y1,Y2,X1,X2,box_num,line_name, dict_clean = dict_clean_img,\
 
         plt.axis("on")
         plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        plt.show()
+        # plt.show()
     	  
     return [box_num,line_name,df_char]
 
@@ -725,95 +727,98 @@ def execute(images):
     B = 2
     X = 98
     Y = 3
+    global graph
+    with graph.as_default():
+        for image_path in images:
+            print(os.getcwd())
+            img = cv2.imread("uploads\\"+image_path)
+            plt.figure(figsize=(12,12))
+            # plt.imshow(img)
 
-    for image_path in images:
-        img = cv2.imread(image_path)
-        plt.figure(figsize=(12,12))
-        plt.imshow(img)
+            #Workspaces Detection
+            workspaces = extract_box(img)
 
-        #Workspaces Detection
-        workspaces = extract_box(img)
+            #line detection
 
-        #line detection
+            #Defining dataframe for storing infos about every line detected
+            df_lines = pd.DataFrame()
 
-        #Defining dataframe for storing infos about every line detected
-        df_lines = pd.DataFrame()
+            for r,rect in enumerate(workspaces):
+                #Cropping boxes for sending to line detection module
+                box = img[rect[1]:rect[1]+rect[3], rect[0]:rect[0]+rect[2]]
+                H,W = box.shape[:2]
+                #Extracting lines present in the boxes
+                cleaned_orig,y1s,y2s = extract_line(box, show=True)
+                x1s = [0]*len(y1s)
+                x2s = [W]*len(y1s)
+                
+            #        if(len(y1s)-len(y2s) == 0):
+            #            print('Lines in workspace-%d : %d' %(r, len(y1s)))
+                
+                df = pd.DataFrame([y1s,y2s,x1s,x2s]).transpose()
+                df.columns = ['y1','y2','x1','x2']
+                df['box_num'] = r
 
-        for r,rect in enumerate(workspaces):
-            #Cropping boxes for sending to line detection module
-            box = img[rect[1]:rect[1]+rect[3], rect[0]:rect[0]+rect[2]]
-            H,W = box.shape[:2]
-            #Extracting lines present in the boxes
-            cleaned_orig,y1s,y2s = extract_line(box, show=True)
-            x1s = [0]*len(y1s)
-            x2s = [W]*len(y1s)
-            
-        #        if(len(y1s)-len(y2s) == 0):
-        #            print('Lines in workspace-%d : %d' %(r, len(y1s)))
-            
-            df = pd.DataFrame([y1s,y2s,x1s,x2s]).transpose()
-            df.columns = ['y1','y2','x1','x2']
-            df['box_num'] = r
+                df_lines= pd.concat([df_lines, df])
 
-            df_lines= pd.concat([df_lines, df])
+                dict_clean_img.update({r:cleaned_orig})
+                dict_img.update({r:box})
+                
+                #print(df)
 
-            dict_clean_img.update({r:cleaned_orig})
-            dict_img.update({r:box})
-            
-            #print(df)
+            df_lines['line_name'] = ['%d%d' %(df_lines.box_num.iloc[i],df_lines.index[i]) \
+                    for i in range(len(df_lines))]
 
-        df_lines['line_name'] = ['%d%d' %(df_lines.box_num.iloc[i],df_lines.index[i]) \
-                for i in range(len(df_lines))]
+            ##exponential and character detection
 
-        ##exponential and character detection
+            #df_chars contains locations of all characters along with box_num and line name
+            list_chars = list(df_lines.apply(lambda row: text_segment(row['y1'],row['y2'],\
+                            row['x1'],row['x2'], row['box_num'],row['line_name'], \
+                            show=True), axis=1))
 
-        #df_chars contains locations of all characters along with box_num and line name
-        list_chars = list(df_lines.apply(lambda row: text_segment(row['y1'],row['y2'],\
-                        row['x1'],row['x2'], row['box_num'],row['line_name'], \
-                        show=True), axis=1))
+            df_chars = pd.DataFrame(list_chars)
+            df_chars.columns = ['box_num', 'line_name', 'char_df']
+                
+            box_nums = df_chars.box_num.unique()
+            char_area_list = []
+            df_chars['char_df'].apply(lambda d: char_area_list.append(list(d['area'])) )
 
-        df_chars = pd.DataFrame(list_chars)
-        df_chars.columns = ['box_num', 'line_name', 'char_df']
-            
-        box_nums = df_chars.box_num.unique()
-        char_area_list = []
-        df_chars['char_df'].apply(lambda d: char_area_list.append(list(d['area'])) )
+            #Area based threshold for detecting and removing noises
+            gamma = 0
+            max_ar = max([max(i) for i in char_area_list])
+            ar_thresh = max_ar*gamma
 
-        #Area based threshold for detecting and removing noises
-        gamma = 0
-        max_ar = max([max(i) for i in char_area_list])
-        ar_thresh = max_ar*gamma
+            #Keeping only those characters whose area of contours is above area threshold
+            df_chars['char_df'] = df_chars['char_df'].apply(lambda d: d[d.area > ar_thresh] )
 
-        #Keeping only those characters whose area of contours is above area threshold
-        df_chars['char_df'] = df_chars['char_df'].apply(lambda d: d[d.area > ar_thresh] )
+            for bn in box_nums:
+                print('BOX %d' %(bn+1))
+                box_img = dict_clean_img[bn] #For Processing B/W image
+                box_img_1 = dict_img[bn] #For saving results
+                box_img = cv2.cvtColor(box_img, cv2.COLOR_GRAY2BGR)
+                
+                df = df_chars[df_chars.box_num == bn].copy()
+                df_l = df_lines[df_lines["box_num"]==bn].copy() #Defining dF with line info
+                
+                df['char_df'].apply(lambda d: d.apply(lambda c: cv2.rectangle(box_img, \
+                (c['X1'],c['Y1']),(c['X2'], c['Y2']),(255*(c['exp']==1),180,0),2+(2*c['exp'])), axis=1 ) )
+                
+                df['line_status'] = df['char_df'].apply(lambda d: evaluate(d[["pred","exp","pred_proba"]],A,B,X,Y))
+                
+                scale_percent = 200 # percent of original size
+                width = int(box_img.shape[1] * scale_percent / 100)
+                height = int(box_img.shape[0] * scale_percent / 100)
+                dim = (width, height)    
+                box_img = cv2.resize(box_img, dim, interpolation = cv2.INTER_AREA)
 
-        for bn in box_nums:
-            print('BOX %d' %(bn+1))
-            box_img = dict_clean_img[bn] #For Processing B/W image
-            box_img_1 = dict_img[bn] #For saving results
-            box_img = cv2.cvtColor(box_img, cv2.COLOR_GRAY2BGR)
-            
-            df = df_chars[df_chars.box_num == bn].copy()
-            df_l = df_lines[df_lines["box_num"]==bn].copy() #Defining dF with line info
-            
-            df['char_df'].apply(lambda d: d.apply(lambda c: cv2.rectangle(box_img, \
-            (c['X1'],c['Y1']),(c['X2'], c['Y2']),(255*(c['exp']==1),180,0),2+(2*c['exp'])), axis=1 ) )
-            
-            df['line_status'] = df['char_df'].apply(lambda d: evaluate(d[["pred","exp","pred_proba"]],A,B,X,Y))
-            
-            scale_percent = 200 # percent of original size
-            width = int(box_img.shape[1] * scale_percent / 100)
-            height = int(box_img.shape[0] * scale_percent / 100)
-            dim = (width, height)    
-            box_img = cv2.resize(box_img, dim, interpolation = cv2.INTER_AREA)
-
-            #Drawing rectangle on original Image
-            df_l['line_status'] = list(df['line_status']) 
-            df_l.apply(lambda c: cv2.rectangle(box_img_1, (c['x1'],c['y1']),(c['x2'],\
-            c['y2']),(255*(c['line_status']==5),255*(c['line_status']==True),\
-                                        255*(c['line_status']==False)),2), axis=1)
-            
-            plt.figure(figsize=(13,7))
-            plt.title('Box - %d' %(bn+1) )
-            plt.imshow(cv2.cvtColor(box_img_1, cv2.COLOR_BGR2RGB))
-            plt.figure()
+                #Drawing rectangle on original Image
+                df_l['line_status'] = list(df['line_status']) 
+                df_l.apply(lambda c: cv2.rectangle(box_img_1, (c['x1'],c['y1']),(c['x2'],\
+                c['y2']),(255*(c['line_status']==5),255*(c['line_status']==True),\
+                                            255*(c['line_status']==False)),2), axis=1)
+                
+                plt.figure(figsize=(13,7))
+                plt.title('Box - %d' %(bn+1) )
+                # plt.imshow(cv2.cvtColor(box_img_1, cv2.COLOR_BGR2RGB))
+                val = plt.figure()
+        return val

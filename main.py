@@ -44,7 +44,7 @@ def upload_files():
 @app.route('/send', methods=['POST'])
 def send_images():
     onlyfiles = [f for f in listdir('./uploads/') if isfile(join('./uploads/', f))]
-    return onlyfiles[0]
+    return execute(onlyfiles)
 
 @app.route('/uploads/<filename>')
 def upload(filename):
