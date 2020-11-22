@@ -27,6 +27,7 @@ Two open source datasets such as MNIST and Kaggle’s mathematical symbols are u
 •	Kaggle’s Handwritten Mathematical symbols - This datasets include 82 symbols but only a few symbols such as “+”, “-”, “*”, “(”, “)” are selected. Each symbol contains at most 4000 examples Images has to be processed in the same way as MNIST before training.
 
 ![MNIST Dataset](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png)
+![image](data/MnistExamples.png)
 
 ### Training and Validation Split 
 The dataset is split into training and validation subsets in the ratio of 8:2 using tensorflow’s image data generator.
