@@ -1,13 +1,49 @@
 <html>
   <head>
+    
     <title>File Upload</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
+
+ <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/bg.css') }}"> 
+
+
+<!-- jQuery library -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <h1>File Upload</h1>
+    <div class="wrapper">
+      <h1> Check Your Accuracy</h1>
     <form action="{{ url_for('upload_files') }}" class="dropzone">
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+      <div class="boxes">
+        <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div ></div>
+          <div ></div>
+          <div ></div>
+      </div>
+  </div>
+    
+ 
   </body>
 </html>
 
