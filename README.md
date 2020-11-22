@@ -26,11 +26,14 @@ Two open source datasets such as MNIST and Kaggle’s mathematical symbols are u
 
 •	Kaggle’s Handwritten Mathematical symbols - This datasets include 82 symbols but only a few symbols such as “+”, “-”, “*”, “(”, “)” are selected. Each symbol contains at most 4000 examples Images has to be processed in the same way as MNIST before training.
 
-![MNIST Dataset](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png)
+* SAMPLE IMAGE:
+
 ![image](data/MnistExamples.png)
 
+![MNIST Dataset](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png)
+
 ### Training and Validation Split 
-The dataset is split into training and validation subsets in the ratio of 8:2 using tensorflow’s image data generator.
+The dataset is split into training and validation subsets in the ratio of 85:15 using tensorflow’s image data generator.
 
 ## Workspace Detection Module
 Steps involved in workspace detection
@@ -71,9 +74,13 @@ Image pre-processing is performed prior to prediction for the extracted characte
 
 •	Dropout of 50 % is used before the final dense layer
 
-•	Model is trained for only 10 epochs with accuracy up to 96 %
+•	Model is trained for only 10 epochs with accuracy up to 97.5%
 
 •	Augmentation only slightly improved accuracy in this case (Random rotations, width shift, height shift) 
+
+## Accuracy
+
+* At the end of 10th epoch the validation accuracy was around ```97.59%``` , offering a minimum ```loss of 0.070```
 
 ## Tesseract 
 Tesseract 4 adds a new neural net (LSTM) based OCR engine which is focused on line recognition. It also has a unique configuration option for detecting equation region in the document
