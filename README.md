@@ -80,7 +80,7 @@ Flask is a lightweight WSGI web application framework, designed to make getting 
 * Create a basic form that accepts the images to process and evaluate the sum.
   Here is a simple HTML page with a form that accepts a file:
 
-    o <!doctype html>
+    <!doctype html>
         <html>
         <head>
             <title>File Upload</title>
@@ -92,7 +92,7 @@ Flask is a lightweight WSGI web application framework, designed to make getting 
             <p><input type="submit" value="Submit"></p>
             </form>
         </body>
-       </html>
+    </html>
 
 # To evaluate and test
 Clone the repository and start the flask app to use product
