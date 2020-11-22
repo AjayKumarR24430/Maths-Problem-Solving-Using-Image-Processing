@@ -18,7 +18,9 @@ This section gives a detailed description about the data set used for analytics 
 
 ### Datasets
 Two open source datasets such as MNIST and Kaggle’s mathematical symbols are used for optical character recognition.
+
 •	MNIST - Samples provided from MNIST (Modified National Institute of Standards and Technology) dataset includes handwritten digits total of 70,000 images consisting of 60,000 examples in training set and 10,000 examples in testing set.
+
 •	Kaggle’s Handwritten Mathematical symbols - This datasets include 82 symbols but only a few symbols such as “+”, “-”, “*”, “(”, “)” are selected. Each symbol contains at most 4000 examples Images has to be processed in the same way as MNIST before training.
 
 ### Training and Validation Split 
