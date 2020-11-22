@@ -58,8 +58,8 @@ Image pre-processing is performed prior to prediction for the extracted characte
 
 •	Optimizers:
  
-   o AdaDelta optimizer is an adaptive learning rate method which requires no manual tuning of a learning rate performed well compared to other optimizers. The parameters used are,  
-      Learning Rate = 1.0  and Rho = 0.95 (decay factor)
+    o AdaDelta optimizer is an adaptive learning rate method which requires no manual tuning of a learning rate performed well compared to other optimizers. The parameters used are,  
+       Learning Rate = 1.0  and Rho = 0.95 (decay factor)
 
 •	Batch Normalization is used to overcome vanishing gradient problem
 
