@@ -1,14 +1,20 @@
 import cv2
+from flask import Response
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
+import io
 from scipy import ndimage
 import math
 import ast
 import operator as op
 import re
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras.backend import set_session
+from tensorflow.python.keras.models import load_model
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior() 
 import keras
@@ -27,9 +33,18 @@ dict_img = {} #ORIGINAL IMAGE DICTIONARY
 #Keras support channel first (1,28,28) only
 keras.backend.set_image_data_format("channels_first")
 
+sess = tf.Session()
+graph = tf.get_default_graph()
+
+# IMPORTANT: models have to be loaded AFTER SETTING THE SESSION for keras! 
+# Otherwise, their weights will be unavailable in the threads after the session there has been set
+set_session(sess)
 #loading models
 model = keras.models.load_model('./models/Digits-model.h5', compile=False)
 model._make_predict_function()
+session = keras.backend.get_session()
+init = tf.global_variables_initializer()
+session.run(init)
 graph = tf.get_default_graph()
 # except Exception as e:
 #     print('Model couldnot be loaded',e)
@@ -728,7 +743,9 @@ def execute(images):
     X = 98
     Y = 3
     global graph
+    global sess
     with graph.as_default():
+        set_session(sess)
         for image_path in images:
             print(os.getcwd())
             img = cv2.imread("uploads\\"+image_path)
@@ -821,4 +838,7 @@ def execute(images):
                 plt.title('Box - %d' %(bn+1) )
                 # plt.imshow(cv2.cvtColor(box_img_1, cv2.COLOR_BGR2RGB))
                 val = plt.figure()
-        return val
+        output = io.BytesIO()
+        FigureCanvas(val).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
+        # return val
