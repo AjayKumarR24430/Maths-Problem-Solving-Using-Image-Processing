@@ -1,8 +1,27 @@
 # Maths-Problem-Solving-Using-Image-Processing
 
 # Project Overview
+    • [Project name](#project_name)
+    • [Project Scope](project_scope)
+    • [Technical Scope](technical_scope)
+        • [Datasets](datasets)
+        • [Training and Validation Split]
+    • [Workspace Detection Module]
+    • [Analysis Module]
+    • [Data Preparation for DCCNN]
+        • [Training]
+    • [Accuracy]
+    • [Tesseract]
+    • [Flask]
+        • [Handling FILE UPLOADS with flask]
+        • [Accepting File Submissions with Flask]
+        • [Dealing with uploaded files]
+        • [Dropzone JS]
+    • [To evaluate and test]
 
 ## Project name
+
+### Evaluating mathematical problems automatically using image processing and deep learning algorithms.
 
 
 ## Project Scope
