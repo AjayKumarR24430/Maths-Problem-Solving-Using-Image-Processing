@@ -126,13 +126,13 @@ Ignoring important aspects such as validation and security for the moment, the s
         return redirect(url_for('index'))
 ```
 
-The upload_file() function is provided with @app.route so that it is invoked when the browser sends a POST request. 
+The ```upload_file()``` function is provided with ```@app.route``` so that it is invoked when the browser sends a POST request. 
 
 The uploaded_file variable holds the submitted file object. This is an instance of class FileStorage, which Flask imports from Werkzeug.
 
-The filename attribute in the FileStorage provides the filename submitted by the the user who wants the image to be evaluated. If the user submits the form without selecting a file in the file field, then the filename is going to be an empty string, so it is important to always check the filename to determine if a file is available or not.
+The filename attribute in the ```FileStorage``` provides the filename submitted by the the user who wants the image to be evaluated. If the user submits the form without selecting a file in the file field, then the filename is going to be an empty string, so it is important to always check the filename to determine if a file is available or not.
 
-When Flask receives a file submission it does not automatically write it to disk. This is actually a good thing, because it gives the application the opportunity to review and validate the file submission, as you will see later. The actual file data can be accessed from the stream attribute. If the application just wants to save the file to disk, then it can call the save() method, passing the desired path as an argument. If the file's save() method is not called, then the file is discarded.
+When Flask receives a file submission it does not automatically write it to disk. This is actually a good thing, because it gives the application the opportunity to review and validate the file submission, as you will see later. The actual file data can be accessed from the stream attribute. If the application just wants to save the file to disk, then it can call the save() method, passing the desired path as an argument. If the file's ```save()``` method is not called, then the file is discarded.
 
 #### It is important to look into the following aspects while uploading the files:
 * Securing File Uploads
@@ -148,11 +148,11 @@ We can either make it the uploads as public or for more secure purposes we can m
 * Consuming private uploads
 
 
-### Dropdown JS
+### Dropzone JS
 
-Use dropdown JS to upload files as the library is flexible and is more customizable.
+Use dropzone JS to upload files as the library is flexible and is more customizable.
 There are other javascript libraries to facilitate uploading of files, as they all follow the HTTP standard, which means that your Flask server is going to work well with all of them.
-Feel free to look at Dropdown.js [documentation](https://www.dropzonejs.com/)
+Feel free to look at Dropzone.js [documentation](https://www.dropzonejs.com/)
 
 Here is the complete and updated version of main.py designed to work with dropzone.js:
 
