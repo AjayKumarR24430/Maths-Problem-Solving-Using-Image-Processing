@@ -19,9 +19,14 @@ This section gives a detailed description about the data set used for analytics 
 ### Datasets
 Two open source datasets such as MNIST and Kaggle’s mathematical symbols are used for optical character recognition.
 
-•	MNIST - Samples provided from MNIST (Modified National Institute of Standards and Technology) dataset includes handwritten digits total of 70,000 images consisting of 60,000 examples in training set and 10,000 examples in testing set.
+•	MNIST - Samples provided from MNIST (Modified National Institute of Standards and Technology) dataset from kaggle,  includes handwritten digits total of 45,000 images consisting of around 35000 examples in training set and around 10,000 examples in testing set.
+
+• The ```MNIST``` database ( National Institute of Standards and Technology ) is a large database of ```handwritten digits that is commonly used for training various image processing systems.```
+• The database is also widely used for training and testing in the field of machine learning. It was created by ```re-mixing``` the samples from NIST's original datasets.
 
 •	Kaggle’s Handwritten Mathematical symbols - This datasets include 82 symbols but only a few symbols such as “+”, “-”, “*”, “(”, “)” are selected. Each symbol contains at most 4000 examples Images has to be processed in the same way as MNIST before training.
+
+![MNIST Dataset](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png)
 
 ### Training and Validation Split 
 The dataset is split into training and validation subsets in the ratio of 8:2 using tensorflow’s image data generator.
@@ -128,7 +133,7 @@ Ignoring important aspects such as validation and security for the moment, the s
 
 The ```upload_file()``` function is provided with ```@app.route``` so that it is invoked when the browser sends a POST request. 
 
-The uploaded_file variable holds the submitted file object. This is an instance of class FileStorage, which Flask imports from Werkzeug.
+The ```uploaded_file``` variable holds the submitted file object. This is an instance of ```class FileStorage```, which Flask imports from ```Werkzeug```.
 
 The filename attribute in the ```FileStorage``` provides the filename submitted by the the user who wants the image to be evaluated. If the user submits the form without selecting a file in the file field, then the filename is going to be an empty string, so it is important to always check the filename to determine if a file is available or not.
 
@@ -150,7 +155,7 @@ We can either make it the uploads as public or for more secure purposes we can m
 
 ### Dropzone JS
 
-Use dropzone JS to upload files as the library is flexible and is more customizable.
+Use ```dropzone JS``` to upload files as the library is flexible and is more customizable.
 There are other javascript libraries to facilitate uploading of files, as they all follow the HTTP standard, which means that your Flask server is going to work well with all of them.
 Feel free to look at Dropzone.js [documentation](https://www.dropzonejs.com/)
 
