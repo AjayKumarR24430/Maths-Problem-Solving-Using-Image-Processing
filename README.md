@@ -1,23 +1,23 @@
 # Maths-Problem-Solving-Using-Image-Processing
 
 # Project Overview
-    • [Project name](#project_name)
-    • [Project Scope](project_scope)
-    • [Technical Scope](technical_scope)
-        • [Datasets](datasets)
-        • [Training and Validation Split]
-    • [Workspace Detection Module]
-    • [Analysis Module]
-    • [Data Preparation for DCCNN]
-        • [Training]
-    • [Accuracy]
-    • [Tesseract]
-    • [Flask]
-        • [Handling FILE UPLOADS with flask]
-        • [Accepting File Submissions with Flask]
-        • [Dealing with uploaded files]
-        • [Dropzone JS]
-    • [To evaluate and test]
+    • [Project name](#project-name)
+    • [Project Scope]#(project-scope)
+    • [Technical Scope](#technical-scope)
+        • [Datasets](#datasets)
+        • [Training and Validation Split](#training-and-validation-split)
+    • [Workspace Detection Module](#workspace-detection-module)
+    • [Analysis Module](#analysis-module)
+    • [Data Preparation for DCCNN](#data-preparation-for-dccnn)
+        • [Training](#training)
+    • [Accuracy](#accuracy)
+    • [Tesseract](#tesseract)
+    • [Flask](#flask)
+        • [Handling FILE UPLOADS with flask](#handling-FILE-UPLOADS-with-flask)
+        • [Accepting File Submissions with Flask](#accepting-file-submissions-with-flask)
+        • [Dealing with uploaded files](#dealing-with-uploaded-files)
+        • [Dropzone JS](#dropzone-js)
+    • [To evaluate and test](#to-evaluate-and-test)
 
 ## Project name
 
